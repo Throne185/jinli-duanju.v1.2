@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>锦鲤短剧搜索</title>
+
+    <!-- SEO优化 -->
+    <meta name="description" content="锦鲤短剧搜索引擎 - 海量短剧、电影、动漫、综艺资源搜索">
+    <meta name="keywords" content="短剧,电影,动漫,综艺,网盘资源,在线观看">
+
+    <!-- 预加载关键资源 -->
+    <link rel="preconnect" href="https://sxqy1giyb.hb-bkt.clouddn.com">
+    <link rel="dns-prefetch" href="//sxqy1giyb.hb-bkt.clouddn.com">
+
+    <!-- PWA支持 -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#667eea">
+    <!-- 保护样式：初始隐藏所有内容 -->
+    <style id="protectionStyle">
+        body * {
+            display: none !important;
+            visibility: hidden !important;
+        }
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            min-height: 100vh !important;
+            margin: 0 !important;
+            font-family: Arial, sans-serif !important;
+            position: relative !important;
+        }
+        body::before {
+            content: "⏳ 正在加载中..." !important;
+            color: white !important;
+            font-size: 1.5rem !important;
+            display: block !important;
+            visibility: visible !important;
+            text-align: center !important;
+            animation: loadingPulse 1.5s ease-in-out infinite !important;
+        }
+        @keyframes loadingPulse {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+    </style>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* 星光背景效果 */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
+
+        .star:nth-child(odd) {
+            animation-duration: 3s;
+        }
+
+        .star:nth-child(3n) {
+            animation-duration: 4s;
+        }
+
+        .star:nth-child(4n) {
+            animation-duration: 2.5s;
+        }
+
+        @keyframes twinkle {
+            0%, 100% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+
+        /* 确保内容在星光之上 */
+        .container {
+            position: relative;
+            z-index: 10;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 标题样式 */
+        .title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: titleGlow 2s ease-in-out infinite alternate;
+        }
+
+
+
+        @keyframes titleGlow {
+            from { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 10px rgba(255,255,255,0.5); }
+            to { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.8); }
+        }
+
+        /* 搜索框样式 */
+        .search-container {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        /* 搜索框七彩闪烁特效 */
+        .search-container::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% + 6px);
+            max-width: 606px;
+            height: calc(100% + 6px);
+            background: linear-gradient(45deg,
+                #ff0000, #ff7f00, #ffff00, #00ff00,
+                #0000ff, #4b0082, #9400d3, #ff0000);
+            background-size: 400% 400%;
+            border-radius: 30px;
+            z-index: -1;
+            animation: rainbowGlow 8s ease-in-out infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes rainbowGlow {
+            0%, 100% {
+                background-position: 0% 50%;
+                opacity: 0.4;
+            }
+            25% {
+                background-position: 100% 50%;
+                opacity: 0.7;
+            }
+            50% {
+                background-position: 200% 50%;
+                opacity: 0.5;
+            }
+            75% {
+                background-position: 300% 50%;
+                opacity: 0.8;
+            }
+        }
+
+        .search-box {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255,255,255,0.9);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            background: rgba(255,255,255,1);
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.3), 0 8px 32px rgba(0,0,0,0.2);
+            animation: searchGlow 1.5s ease-in-out infinite;
+        }
+
+        @keyframes searchGlow {
+            0%, 100% { box-shadow: 0 0 0 3px rgba(255,255,255,0.3), 0 8px 32px rgba(0,0,0,0.2); }
+            50% { box-shadow: 0 0 0 6px rgba(102,126,234,0.4), 0 8px 32px rgba(102,126,234,0.3); }
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+            font-size: 20px;
+        }
+
+        /* 推荐板块样式 */
+        .recommend-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            color: #fff;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+        }
+
+        .carousel-wrapper {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .drama-card {
+            flex: 0 0 300px;
+            margin-right: 20px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .drama-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .drama-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .drama-card:hover::before {
+            left: 100%;
+        }
+
+        .drama-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.3;
+        }
+
+        .media-type {
+            display: inline-block;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+
+        .media-type.电影 {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+        }
+
+        .media-type.动漫 {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+        }
+
+        .media-type.综艺 {
+            background: linear-gradient(45deg, #feca57, #ff9ff3);
+        }
+
+        .media-type.横屏短剧 {
+            background: linear-gradient(45deg, #a8edea, #fed6e3);
+            color: #333;
+        }
+
+        .drama-info {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .drama-tag {
+            display: inline-block;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin-top: 10px;
+        }
+
+        /* 轮播控制按钮 */
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.8);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            color: #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .carousel-nav:hover {
+            background: rgba(255,255,255,1);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .carousel-nav.prev {
+            left: 10px;
+        }
+
+        .carousel-nav.next {
+            right: 10px;
+        }
+
+        /* 搜索结果样式 */
+        .results-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        /* 根据结果数量调整卡片大小 */
+        .results-container.many-results {
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 12px;
+        }
+
+        .results-container.few-results {
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .result-card {
+            background: rgba(255,255,255,0.9);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .result-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .result-info {
+            color: #666;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .result-link-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .result-link {
+            display: inline-block;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            flex: 1;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .result-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(102,126,234,0.4);
+        }
+
+        .result-link.baidu-link {
+            background: linear-gradient(45deg, #1890ff, #40a9ff);
+        }
+
+        .result-link.baidu-link:hover {
+            box-shadow: 0 4px 15px rgba(24,144,255,0.4);
+        }
+
+        .result-link.quark-link {
+            background: linear-gradient(45deg, #52c41a, #73d13d);
+        }
+
+        .result-link.quark-link:hover {
+            box-shadow: 0 4px 15px rgba(82,196,26,0.4);
+        }
+
+        .no-links {
+            color: #999;
+            font-style: italic;
+            font-size: 0.9rem;
+            padding: 8px 16px;
+        }
+
+        /* 弹窗样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            animation: modalSlide 0.3s ease;
+        }
+
+        @keyframes modalSlide {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .modal-info {
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .modal-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .modal-link {
+            display: block;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 140px;
+        }
+
+        .modal-link:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(102,126,234,0.4);
+        }
+
+        .modal-link.baidu-link {
+            background: linear-gradient(45deg, #1890ff, #40a9ff);
+        }
+
+        .modal-link.baidu-link:hover {
+            box-shadow: 0 4px 15px rgba(24,144,255,0.4);
+        }
+
+        .modal-link.quark-link {
+            background: linear-gradient(45deg, #52c41a, #73d13d);
+        }
+
+        .modal-link.quark-link:hover {
+            box-shadow: 0 4px 15px rgba(82,196,26,0.4);
+        }
+
+        .loading {
+            text-align: center;
+            color: #fff;
+            font-size: 1.1rem;
+            margin: 20px 0;
+        }
+
+        .no-results {
+            text-align: center;
+            color: #fff;
+            font-size: 1.1rem;
+            margin: 40px 0;
+        }
+
+        /* 分类提示样式 */
+        .category-hint {
+            text-align: center;
+            color: #fff;
+            margin: 40px 0;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .hint-icon {
+            font-size: 1.5rem;
+            animation: pointUp 2s ease-in-out infinite;
+            color: #fff;
+            opacity: 0.8;
+        }
+
+        .hint-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        @keyframes pointUp {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* 底部信息框样式 */
+        .footer-info {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, rgba(102,126,234,0.95), rgba(118,75,162,0.95));
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255,255,255,0.2);
+            z-index: 999;
+            animation: footerSlideIn 0.5s ease-out;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 12px 20px;
+            text-align: center;
+        }
+
+        #footerText {
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            animation: footerTextGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes footerSlideIn {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes footerTextGlow {
+            from {
+                text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            }
+            to {
+                text-shadow: 1px 1px 2px rgba(0,0,0,0.3), 0 0 10px rgba(255,255,255,0.5);
+            }
+        }
+
+        /* 分类板块样式 */
+        .category-section {
+            margin-bottom: 30px;
+        }
+
+        .category-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .category-tab {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border: 2px solid rgba(255,255,255,0.3);
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .category-tab:hover {
+            background: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.5);
+            transform: translateY(-2px);
+        }
+
+        .category-tab.active {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-color: #667eea;
+            box-shadow: 0 4px 15px rgba(102,126,234,0.4);
+        }
+
+        /* 一键置顶按钮 */
+        .back-to-top {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(102,126,234,0.4);
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            z-index: 1000;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 8px 30px rgba(102,126,234,0.6);
+            background: linear-gradient(45deg, #764ba2, #667eea);
+        }
+
+        .back-to-top-icon {
+            font-size: 1.5rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-8px);
+            }
+            60% {
+                transform: translateY(-4px);
+            }
+        }
+
+        /* 为底部信息框预留空间 */
+        body {
+            padding-bottom: 50px;
+        }
+
+        /* 悬浮搜索结果提示框 */
+        .search-result-toast {
+            position: fixed;
+            bottom: 60px; /* 在底部信息栏上方 */
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, rgba(82,196,26,0.95), rgba(115,209,61,0.95));
+            backdrop-filter: blur(15px);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            box-shadow: 0 4px 20px rgba(82,196,26,0.3);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-50%) translateY(20px);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.3);
+            white-space: nowrap;
+        }
+
+        .search-result-toast.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .search-result-toast.hide {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-50%) translateY(20px);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .title {
+                font-size: 2rem;
+                margin-bottom: 8px;
+            }
+
+            .contact-info {
+                font-size: 1rem;
+                margin-bottom: 20px;
+            }
+
+            .drama-card {
+                flex: 0 0 250px;
+            }
+
+            .carousel-nav {
+                width: 35px;
+                height: 35px;
+                font-size: 16px;
+            }
+
+            /* 移动端置顶按钮优化 */
+            .back-to-top {
+                bottom: 80px; /* 向上移动，避免与底部信息栏重叠 */
+                right: 15px;
+                width: 45px;
+                height: 45px;
+                /* 半透明背景，减少视觉干扰 */
+                background: linear-gradient(45deg, rgba(102,126,234,0.85), rgba(118,75,162,0.85));
+                backdrop-filter: blur(10px);
+                /* 确保可以遮挡内容，避免页面偏移 */
+                z-index: 1001;
+            }
+
+            .back-to-top:hover {
+                background: linear-gradient(45deg, rgba(118,75,162,0.95), rgba(102,126,234,0.95));
+            }
+
+            .results-container {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .modal-content {
+                margin: 20% auto;
+                padding: 20px;
+            }
+
+            /* 移动端悬浮提示框适配 */
+            .search-result-toast {
+                bottom: 70px; /* 移动端稍微高一点 */
+                left: 15px;
+                right: 15px;
+                transform: none;
+                font-size: 0.85rem;
+                padding: 10px 16px;
+                white-space: normal;
+                text-align: center;
+            }
+
+            .search-result-toast.show {
+                transform: translateY(0);
+            }
+
+            .search-result-toast.hide {
+                transform: translateY(20px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title {
+                font-size: 1.5rem;
+            }
+
+            .contact-info {
+                font-size: 0.9rem;
+            }
+
+            .search-input {
+                padding: 12px 40px 12px 15px;
+                font-size: 14px;
+            }
+
+            .drama-card {
+                flex: 0 0 220px;
+                padding: 15px;
+            }
+
+            .result-link-group {
+                flex-direction: column;
+            }
+
+            .result-link {
+                min-width: auto;
+            }
+
+            .modal-links {
+                flex-direction: column;
+            }
+
+            .modal-link {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 星光背景 -->
+    <div class="stars" id="stars"></div>
+
+    <div class="container">
+        <!-- 标题 -->
+        <h1 class="title">锦鲤短剧搜索</h1>
+        
+        <!-- 搜索框 -->
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" class="search-input" id="searchInput" placeholder="搜索短剧名称、演员...">
+                <span class="search-icon">🔍</span>
+            </div>
+        </div>
+        
+        <!-- 今日推荐板块 -->
+        <div class="recommend-section">
+            <h2 class="section-title" id="sectionTitle">🎬 今日更新TOP 🔥</h2>
+            <div class="carousel-container">
+                <div class="carousel-wrapper" id="carouselWrapper">
+                    <!-- 推荐内容将通过JavaScript动态生成 -->
+                </div>
+                <button class="carousel-nav prev" id="prevBtn">‹</button>
+                <button class="carousel-nav next" id="nextBtn">›</button>
+            </div>
+        </div>
+
+        <!-- 分类板块 -->
+        <div class="category-section">
+            <div class="category-tabs">
+                <button class="category-tab" data-category="短剧">短剧</button>
+                <button class="category-tab" data-category="电影">电影</button>
+                <button class="category-tab" data-category="动漫">动漫</button>
+                <button class="category-tab" data-category="综艺">综艺</button>
+                <button class="category-tab" data-category="横屏短剧">横屏短剧</button>
+            </div>
+        </div>
+
+        <!-- 搜索结果 -->
+        <div id="loading" class="loading">正在加载数据...</div>
+        <div id="categoryHint" class="category-hint" style="display: none;">
+            <span class="hint-icon">↑</span>
+            <span class="hint-text">请点击上方分类标签查看媒体清单</span>
+        </div>
+        <div id="results" class="results-container"></div>
+        <div id="noResults" class="no-results" style="display: none;">暂无搜索结果</div>
+    </div>
+
+    <!-- 一键置顶按钮 -->
+    <div class="back-to-top" id="backToTop">
+        <div class="back-to-top-icon">⬆️</div>
+    </div>
+
+    <!-- 悬浮搜索结果提示框 -->
+    <div class="search-result-toast" id="searchResultToast">
+        已搜索到 0 个结果
+    </div>
+
+    <!-- 底部信息框 -->
+    <div class="footer-info" id="footerInfo">
+        <div class="footer-content">
+            <span id="footerText">欢迎访问锦鲤短剧资源 - VX：Ryzen8888</span>
+        </div>
+    </div>
+
+    <!-- 弹窗 -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <div id="modalBody">
+                <!-- 弹窗内容将通过JavaScript动态生成 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 数据地址配置 - 支持多个备用地址
+        const DATA_URLS = [
+            './json.json', // 本地JSON文件（推荐，避免跨域问题）
+            'https://sxqy1giyb.hb-bkt.clouddn.com/json.json', // HTTPS版本
+            'http://sxqy1giyb.hb-bkt.clouddn.com/json.json'
+        ];
+        
+        let dramaData = [];
+        let filteredData = []; // 用于存储当前分类的数据
+        let currentIndex = 0;
+        let autoSlideInterval;
+        let isAutoSliding = true;
+        let currentCategory = null; // 当前选中的分类
+        let isLoading = false; // 防止重复加载
+        
+        // 加载数据 - 支持多个备用地址和错误重试
+        async function loadData() {
+            if (isLoading) return;
+            isLoading = true;
+
+            for (let i = 0; i < DATA_URLS.length; i++) {
+                try {
+                    console.log(`尝试从地址 ${i + 1} 加载数据...`);
+                    const response = await fetch(DATA_URLS[i] + '?t=' + Date.now(), {
+                        method: 'GET',
+                        mode: 'cors', // 明确指定CORS模式
+                        cache: 'no-cache'
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+
+                    const data = await response.json();
+
+                    // 支持新旧两种JSON格式
+                    if (data.dramas && Array.isArray(data.dramas)) {
+                        // 新格式：包含dramas数组、footerInfo和updateTime
+                        dramaData = data.dramas;
+                        updateFooterInfo(data.footerInfo || '欢迎访问锦鲤短剧资源 - VX：Ryzen8888');
+                        updateSectionTitle(data.updateTime || '');
+                    } else if (Array.isArray(data)) {
+                        // 旧格式：直接是数组
+                        dramaData = data;
+                        updateFooterInfo('欢迎访问锦鲤短剧资源 - VX：Ryzen8888');
+                        updateSectionTitle('');
+                    } else {
+                        dramaData = [];
+                    }
+
+                    document.getElementById('loading').style.display = 'none';
+
+                    // 初始化推荐轮播
+                    initCarousel();
+                    startAutoSlide();
+
+                    console.log('数据加载成功，共', dramaData.length, '部短剧');
+                    isLoading = false;
+                    return; // 成功加载，退出循环
+
+                } catch (error) {
+                    console.error(`从地址 ${i + 1} 加载失败:`, error);
+
+                    // 如果是最后一个地址也失败了
+                    if (i === DATA_URLS.length - 1) {
+                        document.getElementById('loading').innerHTML =
+                            '数据加载失败，请检查网络连接或稍后重试<br>' +
+                            '<button onclick="location.reload()" style="margin-top:10px;padding:8px 16px;background:#667eea;color:white;border:none;border-radius:5px;cursor:pointer;">重新加载</button>';
+                    }
+                }
+            }
+            isLoading = false;
+        }
+        
+        // 初始化轮播
+        function initCarousel() {
+            const wrapper = document.getElementById('carouselWrapper');
+
+            // 优先显示今日更新的短剧，并过滤掉无效数据
+            const todayUpdated = dramaData.filter(drama =>
+                drama['是否今日更新'] === '是' &&
+                drama &&
+                (drama['短剧标题'] || drama.title) &&
+                (drama['短剧标题'] || drama.title).trim() !== ''
+            );
+            const otherDramas = dramaData.filter(drama =>
+                drama['是否今日更新'] !== '是' &&
+                drama &&
+                (drama['短剧标题'] || drama.title) &&
+                (drama['短剧标题'] || drama.title).trim() !== ''
+            );
+
+            let recommendList;
+
+            if (todayUpdated.length > 0) {
+                // 如果有今日更新，显示所有今日更新的短剧（不限制数量）
+                recommendList = [...todayUpdated];
+
+                // 如果今日更新少于12部，补充其他短剧
+                if (todayUpdated.length < 12) {
+                    const additionalCount = 12 - todayUpdated.length;
+                    recommendList = [...todayUpdated, ...otherDramas.slice(0, additionalCount)];
+                }
+            } else {
+                // 没有今日更新，显示最新的12部
+                recommendList = otherDramas.slice(0, 12);
+            }
+
+            wrapper.innerHTML = recommendList.map(drama => `
+                <div class="drama-card" onclick="showDramaDetail(${dramaData.indexOf(drama)})">
+                    <div class="drama-title">
+                        <span class="media-type">${getMediaTypeDisplay(drama['媒体类型'] || '短剧')}</span>
+                        ${drama['短剧标题'] || drama.title || '未知标题'}
+                    </div>
+                    <div class="drama-info">📺 ${drama['集数信息'] || drama.episodes || '未知集数'}</div>
+                    <div class="drama-info">🎭 ${drama['主演信息'] || drama.actors || '未知演员'}</div>
+                    <span class="drama-tag">${drama['是否今日更新'] === '是' ? '今日更新' : '最新'}</span>
+                </div>
+            `).join('');
+
+            // 标题会通过updateSectionTitle函数更新，这里不需要重复设置
+        }
+        
+        // 自动轮播
+        function startAutoSlide() {
+            autoSlideInterval = setInterval(() => {
+                if (isAutoSliding) {
+                    nextSlide();
+                }
+            }, 3000);
+        }
+        
+        // 下一张
+        function nextSlide() {
+            const wrapper = document.getElementById('carouselWrapper');
+            const cards = wrapper.children;
+            const maxIndex = Math.max(0, cards.length - 3); // 显示3张卡片
+            
+            if (currentIndex < maxIndex) {
+                currentIndex++;
+            } else {
+                currentIndex = 0;
+            }
+            
+            updateCarousel();
+        }
+        
+        // 上一张
+        function prevSlide() {
+            const wrapper = document.getElementById('carouselWrapper');
+            const cards = wrapper.children;
+            const maxIndex = Math.max(0, cards.length - 3);
+            
+            if (currentIndex > 0) {
+                currentIndex--;
+            } else {
+                currentIndex = maxIndex;
+            }
+            
+            updateCarousel();
+        }
+        
+        // 更新轮播位置
+        function updateCarousel() {
+            const wrapper = document.getElementById('carouselWrapper');
+            const offset = currentIndex * 320; // 卡片宽度 + 间距
+            wrapper.style.transform = `translateX(-${offset}px)`;
+        }
+        
+        // 搜索功能
+        function searchDramas(keyword) {
+            const resultsDiv = document.getElementById('results');
+            const noResultsDiv = document.getElementById('noResults');
+            const categoryHintDiv = document.getElementById('categoryHint');
+
+            // 隐藏提示信息
+            categoryHintDiv.style.display = 'none';
+
+            if (!keyword.trim()) {
+                resultsDiv.innerHTML = '';
+                noResultsDiv.style.display = 'none';
+                hideSearchResultToast(); // 隐藏提示框
+                return;
+            }
+
+            const results = dramaData.filter(drama => {
+                const searchText = keyword.toLowerCase();
+                const title = drama['短剧标题'] || drama.title || '';
+                const actors = drama['主演信息'] || drama.actors || '';
+                const keywords = drama['关键词'] || drama.keywords || '';
+
+                return title.toLowerCase().includes(searchText) ||
+                       actors.toLowerCase().includes(searchText) ||
+                       (typeof keywords === 'string' && keywords.toLowerCase().includes(searchText)) ||
+                       (Array.isArray(keywords) && keywords.some(k => k.toLowerCase().includes(searchText)));
+            });
+
+            if (results.length === 0) {
+                resultsDiv.innerHTML = '';
+                noResultsDiv.style.display = 'block';
+                showSearchResultToast(0); // 显示0个结果
+                return;
+            }
+
+            noResultsDiv.style.display = 'none';
+            showSearchResultToast(results.length); // 显示搜索结果数量
+            resultsDiv.innerHTML = results.map(drama => `
+                <div class="result-card" onclick="showDramaDetail(${dramaData.indexOf(drama)})">
+                    <div class="result-title">
+                        <span class="media-type ${drama['媒体类型'] || '短剧'}">${getMediaTypeDisplay(drama['媒体类型'] || '短剧')}</span>
+                        ${drama['短剧标题'] || drama.title || '未知标题'}
+                    </div>
+                    <div class="result-info">📺 集数: ${drama['集数信息'] || drama.episodes || '未知'}</div>
+                    <div class="result-info">🎭 主演: ${drama['主演信息'] || drama.actors || '未知'}</div>
+                    <div class="result-link-group">
+                        ${generateLinkButtons(drama)}
+                    </div>
+                </div>
+            `).join('');
+
+            // 调整卡片大小
+            adjustCardSize(results.length);
+        }
+        
+        // 显示短剧详情
+        function showDramaDetail(index) {
+            const drama = dramaData[index];
+            const modal = document.getElementById('modal');
+            const modalBody = document.getElementById('modalBody');
+
+            const title = drama['短剧标题'] || drama.title || '未知标题';
+            const episodes = drama['集数信息'] || drama.episodes || '未知';
+            const actors = drama['主演信息'] || drama.actors || '未知';
+            const keywords = drama['关键词'] || drama.keywords || '';
+            const baiduLink = drama['百度链接'] || drama.baiduLink || '#';
+            const quarkLink = drama['夸克链接'] || drama.quarkLink || '#';
+
+            modalBody.innerHTML = `
+                <div class="modal-title">
+                    <span class="media-type ${drama['媒体类型'] || '短剧'}">${getMediaTypeDisplay(drama['媒体类型'] || '短剧')}</span>
+                    ${title}
+                </div>
+                <div class="modal-info">📺 集数: ${episodes}</div>
+                <div class="modal-info">🎭 主演: ${actors}</div>
+                <div class="modal-info">🏷️ 标签: ${typeof keywords === 'string' ? keywords : (Array.isArray(keywords) ? keywords.join(', ') : '无')}</div>
+                <div class="modal-links">
+                    ${generateModalLinkButtons(drama)}
+                </div>
+            `;
+
+            modal.style.display = 'block';
+        }
+        
+        // 调整卡片大小
+        function adjustCardSize(resultsCount) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.classList.remove('many-results', 'few-results');
+
+            if (resultsCount > 20) {
+                resultsDiv.classList.add('many-results');
+            } else if (resultsCount <= 6) {
+                resultsDiv.classList.add('few-results');
+            }
+        }
+
+        // 分类功能 - 优化大数据量处理
+        function showCategoryResults(category) {
+            const resultsDiv = document.getElementById('results');
+            const noResultsDiv = document.getElementById('noResults');
+            const categoryHintDiv = document.getElementById('categoryHint');
+
+            // 如果没有选择分类，显示提示信息
+            if (!category) {
+                resultsDiv.innerHTML = '';
+                noResultsDiv.style.display = 'none';
+                categoryHintDiv.style.display = 'block';
+                currentCategory = null;
+                filteredData = [];
+                return;
+            }
+
+            // 隐藏提示信息
+            categoryHintDiv.style.display = 'none';
+            currentCategory = category;
+
+            // 显示加载状态
+            resultsDiv.innerHTML = '<div style="text-align:center;color:#fff;padding:20px;">正在加载数据...</div>';
+
+            // 使用 setTimeout 避免阻塞UI
+            setTimeout(() => {
+                let results = dramaData.filter(drama => {
+                    const mediaType = drama['媒体类型'] || '短剧';
+                    // 确保数据完整性，过滤掉空数据或无效数据
+                    return mediaType === category &&
+                           drama &&
+                           (drama['短剧标题'] || drama.title) &&
+                           (drama['短剧标题'] || drama.title).trim() !== '';
+                });
+
+                filteredData = results;
+
+                if (results.length === 0) {
+                    resultsDiv.innerHTML = '';
+                    noResultsDiv.style.display = 'block';
+                    noResultsDiv.textContent = `暂无${category}内容`;
+                    return;
+                }
+
+                noResultsDiv.style.display = 'none';
+
+                // 分批渲染，避免一次性渲染太多DOM元素
+                renderResultsInBatches(results, 0, 50); // 每批50个
+
+                // 调整卡片大小
+                adjustCardSize(results.length);
+            }, 10);
+        }
+
+        // 分批渲染结果
+        function renderResultsInBatches(results, startIndex, batchSize) {
+            const resultsDiv = document.getElementById('results');
+            const endIndex = Math.min(startIndex + batchSize, results.length);
+
+            if (startIndex === 0) {
+                resultsDiv.innerHTML = ''; // 清空之前的内容
+            }
+
+            const batchHtml = results.slice(startIndex, endIndex).map(drama => `
+                <div class="result-card" onclick="showDramaDetail(${dramaData.indexOf(drama)})">
+                    <div class="result-title">
+                        <span class="media-type ${drama['媒体类型'] || '短剧'}">${getMediaTypeDisplay(drama['媒体类型'] || '短剧')}</span>
+                        ${drama['短剧标题'] || drama.title || '未知标题'}
+                    </div>
+                    <div class="result-info">📺 集数: ${drama['集数信息'] || drama.episodes || '未知'}</div>
+                    <div class="result-info">🎭 主演: ${drama['主演信息'] || drama.actors || '未知'}</div>
+                    <div class="result-link-group">
+                        ${generateLinkButtons(drama)}
+                    </div>
+                </div>
+            `).join('');
+
+            resultsDiv.insertAdjacentHTML('beforeend', batchHtml);
+
+            // 如果还有更多数据，继续渲染下一批
+            if (endIndex < results.length) {
+                setTimeout(() => {
+                    renderResultsInBatches(results, endIndex, batchSize);
+                }, 10); // 短暂延迟，让UI有时间响应
+            }
+        }
+
+        // 事件监听
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const keyword = e.target.value;
+            if (keyword.trim()) {
+                searchDramas(keyword);
+            } else {
+                // 如果搜索框为空，检查是否有选中的分类
+                const activeTab = document.querySelector('.category-tab.active');
+                if (activeTab) {
+                    showCategoryResults(activeTab.dataset.category);
+                } else {
+                    // 如果没有选中分类，隐藏所有内容
+                    showCategoryResults(null);
+                }
+            }
+        });
+        
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            isAutoSliding = false;
+            nextSlide();
+            setTimeout(() => { isAutoSliding = true; }, 5000);
+        });
+        
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            isAutoSliding = false;
+            prevSlide();
+            setTimeout(() => { isAutoSliding = true; }, 5000);
+        });
+        
+        document.getElementById('closeModal').addEventListener('click', () => {
+            document.getElementById('modal').style.display = 'none';
+        });
+        
+        document.getElementById('modal').addEventListener('click', (e) => {
+            if (e.target.id === 'modal') {
+                document.getElementById('modal').style.display = 'none';
+            }
+        });
+        
+        // 轮播容器鼠标悬停控制
+        document.querySelector('.carousel-container').addEventListener('mouseenter', () => {
+            isAutoSliding = false;
+        });
+        
+        document.querySelector('.carousel-container').addEventListener('mouseleave', () => {
+            isAutoSliding = true;
+        });
+        
+        // 触摸滑动支持
+        let startX = 0;
+        let isDragging = false;
+        
+        document.querySelector('.carousel-container').addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            isDragging = true;
+            isAutoSliding = false;
+        });
+        
+        document.querySelector('.carousel-container').addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+        });
+        
+        document.querySelector('.carousel-container').addEventListener('touchend', (e) => {
+            if (!isDragging) return;
+            
+            const endX = e.changedTouches[0].clientX;
+            const diffX = startX - endX;
+            
+            if (Math.abs(diffX) > 50) {
+                if (diffX > 0) {
+                    nextSlide();
+                } else {
+                    prevSlide();
+                }
+            }
+            
+            isDragging = false;
+            setTimeout(() => { isAutoSliding = true; }, 5000);
+        });
+        
+        // 更新底部信息
+        function updateFooterInfo(text) {
+            const footerText = document.getElementById('footerText');
+            if (footerText) {
+                footerText.textContent = text;
+            }
+        }
+
+        // 更新标题中的更新时间
+        function updateSectionTitle(updateTime) {
+            const sectionTitle = document.getElementById('sectionTitle');
+            if (sectionTitle) {
+                if (updateTime && updateTime.trim()) {
+                    // 如果有更新时间，显示具体日期
+                    sectionTitle.innerHTML = `🎬 ${updateTime}更新TOP 🔥`;
+                } else {
+                    // 如果没有更新时间，显示默认标题
+                    sectionTitle.innerHTML = `🎬 今日更新TOP 🔥`;
+                }
+            }
+        }
+
+        // 获取媒体类型显示
+        function getMediaTypeDisplay(type) {
+            const typeMap = {
+                '短剧': '短剧',
+                '电影': '电影',
+                '电视剧': '电视剧',
+                '动漫': '动漫',
+                '综艺': '综艺',
+                '横屏短剧': '横屏短剧'
+            };
+            return typeMap[type] || '短剧';
+        }
+
+        // 生成链接按钮（搜索结果用）
+        function generateLinkButtons(drama) {
+            const baiduLink = drama['百度链接'] || drama.baiduLink || '';
+            const quarkLink = drama['夸克链接'] || drama.quarkLink || '';
+
+            let buttons = [];
+
+            if (baiduLink && baiduLink !== '#' && baiduLink.includes('pan.baidu.com')) {
+                buttons.push(`<a href="${baiduLink}" class="result-link baidu-link" target="_blank" onclick="event.stopPropagation()">📁 百度网盘</a>`);
+            }
+
+            if (quarkLink && quarkLink !== '#' && quarkLink.includes('pan.quark.cn')) {
+                buttons.push(`<a href="${quarkLink}" class="result-link quark-link" target="_blank" onclick="event.stopPropagation()">☁️ 夸克网盘</a>`);
+            }
+
+            return buttons.length > 0 ? buttons.join('') : '<span class="no-links">暂无网盘链接</span>';
+        }
+
+        // 生成链接按钮（弹窗用）
+        function generateModalLinkButtons(drama) {
+            const baiduLink = drama['百度链接'] || drama.baiduLink || '';
+            const quarkLink = drama['夸克链接'] || drama.quarkLink || '';
+
+            let buttons = [];
+
+            if (baiduLink && baiduLink !== '#' && baiduLink.includes('pan.baidu.com')) {
+                buttons.push(`<a href="${baiduLink}" class="modal-link baidu-link" target="_blank">📁 百度网盘</a>`);
+            }
+
+            if (quarkLink && quarkLink !== '#' && quarkLink.includes('pan.quark.cn')) {
+                buttons.push(`<a href="${quarkLink}" class="modal-link quark-link" target="_blank">☁️ 夸克网盘</a>`);
+            }
+
+            return buttons.length > 0 ? buttons.join('') : '<span class="no-links">暂无网盘链接</span>';
+        }
+
+        // 生成星光背景
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const numberOfStars = 50;
+
+            for (let i = 0; i < numberOfStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+
+                // 随机位置
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+
+                // 随机大小
+                const size = Math.random() * 3 + 1;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+
+                // 随机延迟
+                star.style.animationDelay = Math.random() * 4 + 's';
+
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // 初始化分类标签事件
+        function initCategoryTabs() {
+            const categoryTabs = document.querySelectorAll('.category-tab');
+            categoryTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // 检查是否已经是激活状态
+                    const isActive = tab.classList.contains('active');
+
+                    // 移除所有active类
+                    categoryTabs.forEach(t => t.classList.remove('active'));
+
+                    // 清空搜索框
+                    document.getElementById('searchInput').value = '';
+
+                    if (isActive) {
+                        // 如果点击的是已激活的标签，则取消选择，隐藏内容
+                        showCategoryResults(null);
+                    } else {
+                        // 如果点击的是未激活的标签，则激活并显示内容
+                        tab.classList.add('active');
+                        showCategoryResults(tab.dataset.category);
+                    }
+                });
+            });
+        }
+
+        // 一键置顶功能
+        function initBackToTop() {
+            const backToTopBtn = document.getElementById('backToTop');
+
+            // 监听滚动事件
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 300) {
+                    backToTopBtn.classList.add('show');
+                } else {
+                    backToTopBtn.classList.remove('show');
+                }
+            });
+
+            // 点击置顶
+            backToTopBtn.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+
+        // 显示搜索结果提示框
+        function showSearchResultToast(count) {
+            const toast = document.getElementById('searchResultToast');
+            if (!toast) return;
+
+            // 更新提示内容
+            toast.textContent = `已搜索到 ${count} 个结果`;
+
+            // 显示提示框
+            toast.classList.remove('hide');
+            toast.classList.add('show');
+
+            // 3秒后自动隐藏
+            setTimeout(() => {
+                hideSearchResultToast();
+            }, 3000);
+        }
+
+        // 隐藏搜索结果提示框
+        function hideSearchResultToast() {
+            const toast = document.getElementById('searchResultToast');
+            if (!toast) return;
+
+            toast.classList.remove('show');
+            toast.classList.add('hide');
+        }
+
+        // 解除保护函数
+        function removeProtection() {
+            var protectionStyle = document.getElementById('protectionStyle');
+            if (protectionStyle) {
+                protectionStyle.remove();
+            }
+        }
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 延迟解除保护，显示真实内容
+            setTimeout(function() {
+                removeProtection();
+                createStars();
+                loadData();
+                initCategoryTabs();
+                initBackToTop();
+                // 默认不显示任何内容，等待用户点击分类
+                showCategoryResults(null);
+            }, 1200); // 1.2秒后显示内容
+        });
+
+        // 基础保护代码
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F12' ||
+                (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+                (e.ctrlKey && e.key === 'u')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

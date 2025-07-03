@@ -1,0 +1,10 @@
+# Cloudflare Pages Redirects Configuration
+
+# 重定向旧文件名到新文件名
+/锦鲤短剧搜索引擎.html /index.html 301
+
+# SPA 路由支持（如果需要）
+/* /index.html 200
+
+# 错误页面
+/404 /index.html 404
