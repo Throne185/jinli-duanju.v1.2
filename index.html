@@ -1412,8 +1412,8 @@
             const sectionTitle = document.getElementById('sectionTitle');
             if (sectionTitle) {
                 if (updateTime && updateTime.trim()) {
-                    // 如果有更新时间，显示具体日期
-                    sectionTitle.innerHTML = `🎬 ${updateTime}更新TOP 🔥`;
+                    // 如果有更新时间，显示具体日期，格式为"X月X日更新"
+                    sectionTitle.innerHTML = `🎬 ${updateTime}更新 🔥`;
                 } else {
                     // 如果没有更新时间，显示默认标题
                     sectionTitle.innerHTML = `🎬 今日更新TOP 🔥`;
